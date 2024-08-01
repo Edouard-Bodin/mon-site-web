@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page QR Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Informations du QR Code</h1>
+        <form id="qrForm">
+            <div class="form-group">
+                <label for="field1">Champ 1</label>
+                <input type="text" id="field1" name="field1" readonly>
+            </div>
+            <div class="form-group">
+                <label for="field2">Champ 2</label>
+                <input type="text" id="field2" name="field2" readonly>
+            </div>
+            <div class="form-group">
+                <label for="field3">Champ 3</label>
+                <input type="text" id="field3" name="field3" readonly>
+            </div>
+        </form>
+    </div>
+
+    <!-- Inclure la bibliothèque jsQR pour décoder les QR codes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsqr.min.js"></script>
+    <script>
+        // Fonction pour extraire les données du QR code et remplir les champs
+        function handleQRCodeData(data) {
+            try {
+                // On suppose que les données du QR code sont au format JSON
+                const parsedData = JSON.parse(data);
+
+                // Remplir les champs du formulaire
+                document.getElementById('field1').value = parsedData.field1 || '';
+                document.getElementById('field2').value = parsedData.field2 || '';
+                document.getElementById('field3').value = parsedData.field3 || '';
+            } catch (e) {
+                console.error('Erreur lors du traitement des données du QR code:', e);
+            }
+        }
+
+        // Fonction pour obtenir les données du QR code depuis l'URL
+        function getQRCodeDataFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const qrData = urlParams.get('data');
+            if (qrData) {
+                handleQRCodeData(decodeURIComponent(qrData));
+            }
+        }
+
+        // Appel de la fonction pour traiter les données du QR code à l'ouverture de la page
+        getQRCodeDataFromURL();
+    </script>
+</body>
+</html>
